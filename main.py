@@ -7,22 +7,44 @@ from keep_alive import keep_alive
 
 status = "dnd"
 
-headers = {"Authorization": os.getenv("TOKEN"), "Content-Type": "application/json"}
-userinfo = requests.get('https://discordapp.com/api/v9/users/@me', headers=headers).json()
+headers = {
+  "Authorization": os.getenv("TOKEN"),
+  "Content-Type": "application/json"
+}
+userinfo = requests.get('https://discordapp.com/api/v9/users/@me',
+                        headers=headers).json()
 username = userinfo["username"]
 discriminator = userinfo["discriminator"]
 userid = userinfo["id"]
 
+
 def onliner(token, status):
-    ws = websocket.WebSocket()
-    ws.connect('wss://gateway.discord.gg/?v=9&encoding=json')
-    start = json.loads(ws.recv())
-    heartbeat = start['d']['heartbeat_interval']
-    auth = {"op": 2,"d": {"token": token,"properties": {"$os": "Windows 10","$browser": "Google Chrome","$device": "Windows"},"presence": {"status": status,"afk": False}},"s": None,"t": None}
-    ws.send(json.dumps(auth))
-    online = {"op":1,"d":"None"}
-    time.sleep(heartbeat / 1000)
-    ws.send(json.dumps(online))
+  ws = websocket.WebSocket()
+  ws.connect('wss://gateway.discord.gg/?v=9&encoding=json')
+  start = json.loads(ws.recv())
+  heartbeat = start['d']['heartbeat_interval']
+  auth = {
+    "op": 2,
+    "d": {
+      "token": token,
+      "properties": {
+        "$os": "Windows 10",
+        "$browser": "Google Chrome",
+        "$device": "Windows"
+      },
+      "presence": {
+        "status": status,
+        "afk": False
+      }
+    },
+    "s": None,
+    "t": None
+  }
+  ws.send(json.dumps(auth))
+  online = {"op": 1, "d": "None"}
+  time.sleep(heartbeat / 1000)
+  ws.send(json.dumps(online))
+
 
 def run_onliner():
   os.system("clear")
@@ -30,6 +52,7 @@ def run_onliner():
   while True:
     onliner(os.getenv("TOKEN"), status)
     time.sleep(30)
+
 
 keep_alive()
 run_onliner()
