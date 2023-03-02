@@ -5,7 +5,7 @@ import requests
 import os
 from keep_alive import keep_alive
 
-status = "online"
+status = "dnd"
 
 headers = {"Authorization": os.getenv("TOKEN"), "Content-Type": "application/json"}
 userinfo = requests.get('https://discordapp.com/api/v9/users/@me', headers=headers).json()
